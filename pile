@@ -1,0 +1,201 @@
+#include <stdio.h>
+#include <stdlib.h>
+#ifndef __STACK__H__
+#define __STACK__H__
+
+typedef enum
+{
+    false,
+    true
+}Bool;
+
+
+
+
+
+
+/*def d'une pile*/
+typedef struct StackElement
+{
+    int value;
+    struct StackElement *next;
+}StackElement, *Stack;
+
+
+
+
+
+
+
+
+/* Prototype des fonctions */
+Stack new_stack(void);/*crée une nouvelle foction VIDE!!!*/
+Bool is_empty_stack(Stack st);/* return vrai si vide faux sinon */
+Stack push_stack(Stack st, int x);/* rajoute un element au début */
+Stack clear_stack(Stack st);/* détruit la pile pour évité les fuite mémoire*/
+void printf_stack(Stack st);/*Affiche la pile*/
+Stack pop_stack(Stack st);/* Detruit le dernier element ajouter*/
+
+
+
+
+
+
+
+
+
+#endif // __STACK__H__
+
+
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+Stack new_stack(void)
+{
+   return NULL;
+}
+
+Bool is_empty_stack(Stack st)
+{
+    if (st == NULL)
+        return true;
+
+
+    return false;
+}
+
+
+
+
+
+
+Stack push_stack(Stack st, int x)
+{
+    StackElement *element;
+
+    element = malloc(sizeof(*element));
+
+
+    if (element==NULL)
+    {
+        printf("probleme d'allocation dynamique.\n");
+        exit(EXIT_FAILURE);
+    }
+    element->value=x;
+    element->next=st;
+
+
+
+
+    return element;
+    }
+
+
+
+    Stack clear_stack(Stack st)
+    {
+        StackElement *element;
+
+        if(is_empty_stack(st))
+            return new_stack();
+        element= st->next;
+        free(st);
+
+        return clear_stack(element);
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    void print_stack(Stack st)
+    {
+        if(is_empty_stack(st))
+        {
+            printf("rien a afficher, la est vide\n");
+            return;
+        }
+
+        while(!is_empty_stack(st))
+        {
+            printf("[%d]\n", st->value);
+            st=st->next;
+        }
+    }
+
+
+ Stack pop_stack(Stack st)
+ {
+     StackElement *element;
+     if (is_empty_stack(st))
+        return new_stack();
+     element= st->next;
+     free(st);
+
+     return element;
+ }
+
+
+
+
+
+/*-----------------------------*/
+
+/*utilisation lambda des fonction*/
+
+int main(void)
+{
+    Stack sta=new_stack();
+
+    if (is_empty_stack(sta))
+        printf("la pile est vide\n");
+    else
+        printf("pile remplis");
+
+
+    sta=push_stack(sta, 14);
+    sta=push_stack(sta, 47);
+    sta=push_stack(sta, 23);
+    sta=push_stack(sta, 31);
+
+    print_stack(sta);
+printf("/---------------------------\n");
+
+    sta=pop_stack(sta);
+
+
+
+    print_stack(sta);
+
+
+
+
+
+
+    if (is_empty_stack(sta))
+        printf("la pile est vide\n");
+    else
+        printf("pile remplis\n");
+
+    sta=clear_stack(sta);
+
+
+    if (is_empty_stack(sta))
+        printf("la pile est vide\n");
+    else
+        printf("pile remplis\n");
+
+
+    return 0;
+}
