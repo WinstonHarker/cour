@@ -1,0 +1,335 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+
+
+typedef enum
+{
+    false,
+    true
+}Bool;
+
+
+
+typedef struct StackElement
+    {
+        int value;
+        struct StackElement *next;
+    } StackElement, *Stack;
+
+
+Stack New_Stack(){
+
+return NULL;
+
+}
+
+
+
+
+
+
+
+Bool is_empty(Stack st)
+{
+    if (st == NULL)
+        return true;
+
+
+    return false;
+}
+
+
+Stack push_stack(Stack st, int x)
+{
+    StackElement *element;
+
+    element = malloc(sizeof(*element));
+
+
+    if (element==NULL)
+    {
+        printf("probleme d'allocation dynamique.\n");
+        exit(EXIT_FAILURE);
+    }
+    element->value=x;
+    element->next=st;
+
+
+
+
+    return element;
+    }
+
+
+
+Stack stack_end(Stack st, int x){
+StackElement *element;
+
+if (element==NULL){printf ("erreur d'allocation\n"); return 0;}
+element->value=st;
+element->next=x;
+return element;
+}
+
+
+
+Stack clear_stack(Stack st)
+    {
+        StackElement *element;
+
+        if(is_empty(st))
+            return New_Stack();
+        element= st->next;
+        free(st);
+
+        return clear_stack(element);
+    }
+
+
+
+void print_stack(Stack st)
+    {
+        if(is_empty(st))
+        {
+            printf("rien a afficher, la est vide\n");
+            return;
+        }
+
+        while(!is_empty(st))
+        {
+            printf("[%d]\n", st->value);
+            st=st->next;
+        }
+    }
+
+
+
+
+Stack pop_Stack(Stack st){
+StackElement *element;
+if (is_empty(st))
+        return New_Stack();
+element=st->next;
+free (st);
+return element;
+
+
+
+
+}
+
+
+
+
+Stack Eliminer_doublon(Stack st){
+Stack element; int deja_vue[1000],i,x=0,v,y=0,l;
+element=New_Stack();
+deja_vue[x]=st->value;
+x=x+1;
+st=st->next;
+while(!is_empty(st))
+        {
+            i=st->value;
+            y=0;
+            for (v=0; v<=x-1; v++){
+                if (deja_vue[v]==i){y=1;}
+            }
+            if (y==0){
+                deja_vue[x]=i;
+                x=x+1;
+            }
+
+            st=st->next;
+        }
+
+            for (v=0; v<=x-1; v++)
+            element=push_stack(element,deja_vue[v]);
+
+
+        return element;
+
+
+}
+
+
+
+
+
+
+Stack Trier_list(Stack st){
+Stack element; int tab[1000],v,b=0,y,o,x,i;
+element=New_Stack();
+x=0;
+while(!is_empty(st))
+        {
+            i=st->value;
+            tab[x]=i;
+            st=st->next;
+            x=x+1;
+        }
+
+        while(b==0){
+            b=1;
+            for (y=0;y<x;y++){
+                if (tab[y]>tab[y+1]){
+                    b=0;
+                    o=tab[y];
+                    tab[y]=tab[y+1];
+                    tab[y+1]=o;
+
+                }
+
+                if (tab[y]>tab[y+1]){
+                    b=0;
+                    o=tab[y];
+                    tab[y]=tab[y+1];
+                    tab[y+1]=o;}
+
+            }
+
+        }
+        for (v=0; v<=x; v++)
+            element=push_stack(element,tab[v]);
+        element=Eliminer_doublon(element);
+
+
+        return element;
+
+}
+
+
+
+
+
+Stack Creer_liste_alea(int val_max, int nb_val){
+Stack res;int i,v;
+res=New_Stack();
+
+
+for (i=0; i<=nb_val; i++){
+    v=rand()%val_max;
+
+    res=push_stack(res, v);
+}
+
+return res;
+}
+
+
+
+int Est_un_ensemble_it(Stack st){
+
+int tab[1000],v,b=0,y,o,x=0,i;
+
+
+
+
+while(!is_empty(st))
+        {
+            i=st->value;
+            tab[x]=i;
+            x=x+1;
+            st=st->next;
+
+        }
+
+            for (y=0;y<x;y++){
+                if (tab[y]>tab[y+1]){
+                    return 0;
+                }
+            }
+            for (y=0;y<x;y++){
+                for (i=0;i<=x;i++){
+                    if (i!=y && tab[i]==tab[y]){return 0;}
+                }
+            }
+return 1;
+}
+
+
+
+
+int listes_identiques(Stack st1, Stack st2){
+int tab2[1000],tab3[1000],x=0,i,y,x2=0;
+
+while (!is_empty(st1)){
+   i=st1->value;
+   tab2[x]=i;
+   x=x+1;
+   st1=st1->next;
+}
+while (!is_empty(st2)){
+   i=st2->value;
+   tab3[x2]=i;
+   x2=x2+1;
+   st2=st2->next;
+}
+
+
+
+
+for (i=0;i<x;i++){
+        if (tab3[i]!=tab2[i])
+            {return 0;}
+}
+
+return 1;
+
+
+
+
+}
+
+
+
+
+
+
+
+
+int listes_identiques_rec(Stack st1, Stack st2){
+int x=0,i,y,x2=0;
+   i=st1->value;
+   y=st1->value;
+   x=x+1;
+   x2=x2+1;
+   if (i!=y){return 0;}
+   st1=st1->next;
+    st2=st2->next;
+    if(i==NULL && y==NULL){return 1;}
+    listes_identiques_rec(st1,st2);
+
+}
+
+
+
+
+
+
+int main() {
+int i, v, b;
+Stack res, res2;
+res2=Creer_liste_alea(60,60);
+printf ("-----------------------créer liste------------------------------\n");
+res=Creer_liste_alea(60,60);
+print_stack(res);
+printf ("-----------------------no doublon------------------------------\n");
+res=Eliminer_doublon(res);
+print_stack(res);
+printf("est un ensemble?:%d\n",Est_un_ensemble_it(res));
+printf ("--------------------------------------trier list------------------------------\n");
+res=Trier_list(res);
+print_stack(res);
+printf("est un ensemble:%d\n",Est_un_ensemble_it(res));
+printf ("-------------------------identique a res2------------------\n");
+res2=res;
+printf("%d",listes_identiques(res, res2));
+
+
+
+return 0;
+}
+
+
